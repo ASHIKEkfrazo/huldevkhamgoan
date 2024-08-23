@@ -272,7 +272,6 @@ function Dashboard() {
   useEffect(() => {
     getDepartments();
     getMachines();
-    getShiftData()
     // initialDateRange();
     getStoppage()
     initialTableData();
@@ -280,6 +279,7 @@ function Dashboard() {
     alertApi()
     getSystemStatus()
     downtimeAnalysisData()
+    getShiftData()
   }, []);
 
   const getMachines = () => {
@@ -304,7 +304,7 @@ function Dashboard() {
   };
   const getShiftData = () => {
     const domain = `${baseURL}`;
-    let url = `${domain}/stoppage-graph/`;
+    let url = `${domain}stoppage-graph/`;
     axios.get(url, {
       headers: {
         'Authorization': `Bearer ${AuthToken}`
@@ -1026,14 +1026,7 @@ function Dashboard() {
                   </Card>
                 </Col>
 
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
-                  <Card bordered={false} className="criclebox h-full">
 
-                    <ApexChart data={shiftData} />
-
-
-                  </Card>
-                </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
                   <Card bordered={false} className="criclebox h-full">
                     {
@@ -1046,8 +1039,16 @@ function Dashboard() {
 
               </>
           }
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
+            <Card bordered={false} className="criclebox h-full">
 
+              <ApexChart data={shiftData} />
+
+
+            </Card>
+          </Col>
         </Row>
+
         <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
 
           <Card bordered={false} className="criclebox h-full">
