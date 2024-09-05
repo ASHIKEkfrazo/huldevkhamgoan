@@ -66,10 +66,10 @@ const App = () => {
       element: <Layout />,
 
       children: [
-        {
-          path: "",
-          element: <Dashboard />,
-        },
+        // {
+        //   path: "",
+        //   element: <Dashboard />,
+        // },
         {
           path: 'dashboard-home',
           element: <Dashboard />,
@@ -108,6 +108,10 @@ const App = () => {
         //   element: <Selectdashboard />,
         // },
       ]
+    },
+    {
+      path: "dashboard",
+      element: <Dashboard />,
     },
     {
       path: 'Plant',

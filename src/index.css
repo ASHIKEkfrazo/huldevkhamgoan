@@ -257,3 +257,13 @@ label::after {
 .ai-view-image_container{
   height: 50vh !important;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ec522d;
+}
+::-webkit-scrollbar-track {
+  background-color: #cfcfcf;
+}

@@ -101,7 +101,13 @@ function Dashboard() {
 
 
   const localItems = localStorage.getItem("PlantData")
-  const localPlantData = JSON.parse(localItems)
+  // const localPlantData = JSON.parse(localItems)
+  const localPlantData = {
+    id: 1,
+    is_active: false,
+    plant_name: "Khamgaon"
+  }
+
 
 
   const handleDateRangeChange = (dates, dateStrings) => {
@@ -449,7 +455,7 @@ function Dashboard() {
   const initialProductionData = () => {
     const domain = baseURL;
     // const [fromDate, toDate] = [startDate, endDate].map(date => date.toISOString().slice(0, 10)); // Format dates as YYYY-MM-DD
-    const url = `${domain}defct-vs-machine/?plant_id=${localPlantData.id}`;
+    const url = `${domain}defct-vs-machine/?plant_id=${2}`;
     // const url = `${domain}dashboard/`;
     axios.get(url, {
       headers: {

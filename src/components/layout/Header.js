@@ -26,7 +26,8 @@ import {
   Typography,
   Switch,
   notification, Space
-,Modal} from "antd";
+  , Modal
+} from "antd";
 
 import {
   SearchOutlined,
@@ -38,7 +39,7 @@ import {
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
-import { baseURL,AuthToken } from "../../API/API";
+import { baseURL, AuthToken } from "../../API/API";
 const ButtonContainer = styled.div`
   .ant-btn-primary {
     background-color: #ec522d;
@@ -261,11 +262,11 @@ function Header({
 }) {
   const { Title, Text } = Typography;
   const navigate = useNavigate()
-const localData =  localStorage.getItem("PlantData");
-const PlantName = JSON.parse(localData)
+  const localData = localStorage.getItem("PlantData");
+  const PlantName = JSON.parse(localData)
 
 
-  const [refreshTokens, setrefreshTokens] = useState(() => 
+  const [refreshTokens, setrefreshTokens] = useState(() =>
     JSON.parse(localStorage.getItem('refreshToken')) || null
   );
   const [visible, setVisible] = useState(false);
@@ -282,11 +283,11 @@ const PlantName = JSON.parse(localData)
   const [api, contextHolder] = notification.useNotification();
   const openNotification = () => {
     api.success({
-      message:<div style={{fontWeight:"600",fontSize:"1.1rem"}}>Logout Successful</div> ,
-   
+      message: <div style={{ fontWeight: "600", fontSize: "1.1rem" }}>Logout Successful</div>,
+
     });
   };
-  const Clock=()=>{
+  const Clock = () => {
     const [date, setDate] = useState(new Date());
     function refreshClock() {
       setDate(new Date());
@@ -303,42 +304,42 @@ const PlantName = JSON.parse(localData)
       </span>
     );
   }
-  const DateContainer=()=>{
+  const DateContainer = () => {
     const date = new Date().toLocaleDateString();
-    return(<>
-    {date}
+    return (<>
+      {date}
 
     </>)
   }
-  const logout = async()=>{
+  const logout = async () => {
     try {
-      await axios.post(`${baseURL}logout/`,{
-        refresh_token:refreshTokens
-      },{
-        headers:{
+      await axios.post(`${baseURL}logout/`, {
+        refresh_token: refreshTokens
+      }, {
+        headers: {
           Authorization: `Bearer ${AuthToken}`
         }
       })
-      
-      
+
+
     } catch (error) {
       console.log(error)
     }
   }
-  const handleLogout  = async ()=>{
-     await setModal1Open(false)
+  const handleLogout = async () => {
+    await setModal1Open(false)
     await openNotification()
-  
-      await navigate('/login');
-     await logout()
-     await localStorage.clear();
+
+    await navigate('/login');
+    await logout()
+    await localStorage.clear();
 
   }
   return (
     <>
-    {contextHolder}
+      {contextHolder}
       <Modal
-        title={<div style={{textAlign:'center',padding:'1rem 0',fontWeight:'600',fontSize:'1.2rem'}}>Are You Sure You Want To Logout?</div>}
+        title={<div style={{ textAlign: 'center', padding: '1rem 0', fontWeight: '600', fontSize: '1.2rem' }}>Are You Sure You Want To Logout?</div>}
         style={{
           top: 20,
         }}
@@ -346,32 +347,32 @@ const PlantName = JSON.parse(localData)
         onCancel={() => setModal1Open(false)}
         footer={null}
       >
-        <div className="" style={{display:'flex',justifyContent:'center'}}>
-        <Button onClick={handleLogout} style={{background:'orangeRed',color:'#fff'}}>LOGOUT</Button>
+        <div className="" style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button onClick={handleLogout} style={{ background: 'orangeRed', color: '#fff' }}>LOGOUT</Button>
         </div>
       </Modal>
       {/* <div className="setting-drwer" onClick={showDrawer}>
         {setting}
       </div> */}
       <Row gutter={[24, 0]}>
-      <Col span={12}>
-      <div  className="" style={{padding:"0.5rem 2rem", borderRadius:'10px',background:'#fafafa',    boxShadow: '0 20px 27px rgb(0 0 0 / 5%)',width:"100%",textAlign:"center",color:'#000',fontWeight:'600',fontSize:'1.6rem',maxWidth:"350px"}}>
-    
-         {PlantName.plant_name}
-        </div>
-      </Col>
-        <Col span={12}  style={{display:'flex',justifyContent:'end'}}>
-        
-        <div onClick={()=>setModal1Open(true)} className="" style={{padding:"0.5rem 2rem", borderRadius:'10px',cursor:'pointer',background:'#fafafa',boxShadow:'rgba(0, 0, 0, 0.1) 0px 2px 4px',border:'0.5px solid #8080806e',display:'flex',justifyContent:'center',alignItems:'center'}}>
-        <img src="https://w7.pngwing.com/pngs/253/714/png-transparent-logout-heroicons-ui-icon-thumbnail.png" style={{height:'30px',width:'30px'}} alt="" />
+        <Col span={12}>
+          <div className="" style={{ padding: "0.5rem 2rem", borderRadius: '10px', background: '#fafafa', boxShadow: 'rgba(0, 0, 0, 0.05) 2px 2px 5px;', width: "100%", textAlign: "center", color: '#000', fontWeight: '600', fontSize: '1.6rem', maxWidth: "350px" }}>
 
-         <span style={{color:"#000",fontWeight:'700'}}> Logout</span>
-        </div>
+            {PlantName.plant_name}
+          </div>
         </Col>
-            
+        <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
+
+          <div onClick={() => setModal1Open(true)} className="" style={{ padding: "0.5rem 2rem", borderRadius: '10px', cursor: 'pointer', background: '#fafafa', boxShadow: 'rgba(0, 0, 0, 0.1) 0px 2px 4px', border: '0.5px solid #8080806e', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img src="https://w7.pngwing.com/pngs/253/714/png-transparent-logout-heroicons-ui-icon-thumbnail.png" style={{ height: '30px', width: '30px' }} alt="" />
+
+            <span style={{ color: "#000", fontWeight: '700' }}> Logout</span>
+          </div>
+        </Col>
+
       </Row>
-      <Row gutter={[24, 0]} style={{marginTop:'2rem'}}>
-        <Col span={24} md={6} style={{display:'flex',alignItems:'center'}}>
+      <Row gutter={[24, 0]} style={{ marginTop: '2rem' }}>
+        <Col span={24} md={6} style={{ display: 'flex', alignItems: 'center' }}>
           {/* <Breadcrumb>
             <Breadcrumb.Item>
               <NavLink to="/">Pages</NavLink>
@@ -383,24 +384,24 @@ const PlantName = JSON.parse(localData)
           <div className="ant-page-header-heading">
             <span
               className="ant-page-header-heading-title"
-              style={{ textTransform:'capitalize',fontSize:'1.4rem' }}
+              style={{ textTransform: 'capitalize', fontSize: '1.4rem' }}
             >
               {subName.replace("/", "")}
             </span>
           </div>
         </Col>
         <Col span={24} md={18} className="header-control"  >
-          <div className="" style={{display:"flex",gap:"2rem", fontSize:"1rem",fontWeight:"500",}}> 
-          <div className="" style={{padding:'0.1rem 1rem',display:"flex",gap:"2rem", fontSize:"1rem",fontWeight:"500",border:'0.5px solid #c6c6c6',alignItems:'center',justifyContent:'center',borderRadius:'10px'}}>
-          <DateContainer/>
-          <Clock />
+          <div className="" style={{ display: "flex", gap: "2rem", fontSize: "1rem", fontWeight: "500", }}>
+            <div className="" style={{ padding: '0.1rem 1rem', display: "flex", gap: "2rem", fontSize: "1rem", fontWeight: "500", border: '0.5px solid #c6c6c6', alignItems: 'center', justifyContent: 'center', borderRadius: '10px' }}>
+              <DateContainer />
+              <Clock />
+            </div>
+            <div className="" style={{ height: "50px", width: '50px', border: '0.5px solid #c6c6c6', borderRadius: '50%' }}>
+              <img src="https://xtemko.stripocdn.email/content/guids/CABINET_d8f211887c57378d14d80cfb73c09f4b2db394a5cf71f6e0cdda10e02f8c454f/images/vin_logo.jpeg" alt="" width={100} style={{ padding: '0.5rem' }} />
+            </div>
           </div>
-          <div className="" style={{height:"50px",width:'50px',border:'0.5px solid #c6c6c6',borderRadius:'50%'}}>
-            <img src="https://xtemko.stripocdn.email/content/guids/CABINET_d8f211887c57378d14d80cfb73c09f4b2db394a5cf71f6e0cdda10e02f8c454f/images/vin_logo.jpeg" alt="" width={100} style={{padding:'0.5rem'}} />
-          </div>
-          </div>
-  
-    
+
+
           {/* <Badge size="small" count={4}>
             <Dropdown overlay={menu} trigger={["click"]}>
               <a
@@ -538,8 +539,8 @@ const PlantName = JSON.parse(localData)
             placeholder="Type here..."
             prefix={<SearchOutlined />}
           /> */}
-  
-        </Col> 
+
+        </Col>
       </Row>
     </>
   );
