@@ -20,6 +20,7 @@ import { Hourglass } from "react-loader-spinner";
 import ShiftChart from "../components/chart/ShiftChart";
 import ApexChart from "../components/chart/ShiftChart";
 import TableComponent from "../components/TableComponent/Table";
+import GroupedBarChart from "../components/chart/GroupedBarChart";
 
 function Dashboard() {
 
@@ -48,10 +49,9 @@ function Dashboard() {
 
 
   const [selectedMachine, setSelectedMachine] = useState(null);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [selectedDefect, setSelectedDefect] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedStoppage, setSelectedStoppage] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [loaderData, setLoaderData] = useState(false)
   const [dateRange, setDateRange] = useState([]);
@@ -61,17 +61,14 @@ function Dashboard() {
 
   const [machineOptions, setMachineOptions] = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
-  const [stoppageOptions, setStoppageOptions] = useState(
-  );
+  const [stoppageOptions, setStoppageOptions] = useState();
+  const [shiftOptions, setShiftOptions] = useState(["Shift1", "Shift2", "Shift3"]);
   const [productOptions, setProductOptions] = useState([]);
   const [activeMachines, setActiveMachines] = useState([])
   const [activeProd, setActiveProd] = useState([])
   const [currentDateData, setCurrentDateData] = useState();
-  const [shiftData, setShiftData] = useState(
-
-
-
-  )
+  const [shiftData, setShiftData] = useState();
+  const [downTimeGraphData, setDownTimeGraphData] = useState();
 
   const [pagination, setPagination] = useState({
     current: 1,
@@ -88,8 +85,8 @@ function Dashboard() {
   const handleMachineChange = value => {
     setSelectedMachine(value);
   };
-  const handleDepartmentChange = value => {
-    setSelectedDepartment(value);
+  const handleShiftChange = value => {
+    setSelectedShift(value);
   };
   const handleProductChange = value => {
     setSelectedProduct(value);
@@ -99,7 +96,7 @@ function Dashboard() {
   };
 
 
-
+  console.log(shiftOptions, "<<<")
   const localItems = localStorage.getItem("PlantData")
   // const localPlantData = JSON.parse(localItems)
   const localPlantData = {
@@ -131,16 +128,22 @@ function Dashboard() {
 
   const resetTableData = () => {
     setFilterActiveTable(false)
-    downtimeAnalysisData()
+    downtimeAnalysisData(1)
+    setSelectedMachine(null)
+    setSelectedProduct(null)
+    setSelectedDate(null)
+    setSelectedStoppage(null)
   }
 
-  const handleApplyFilters = () => {
+  const handleApplyFilters = (pagination) => {
     setLoaderData(true)
     const domain = `${baseURL}`;
     let fromDate, toDate;
     if (Array.isArray(dateRange) && dateRange.length === 2) {
       [fromDate, toDate] = dateRange;
     }
+
+
 
     let url = `${domain}dashboard/?`;
     // url += `plant_id=${localPlantData.id}&from_date=${fromDate}&to_date=${toDate}&machine_id=${selectedMachine}&department_id=${selectedDepartment}&product_id=${selectedProduct}&defect_id=${selectedDefect}`;
@@ -210,10 +213,9 @@ function Dashboard() {
   };
 
 
-  const handleApplyFiltersTable = () => {
+  const handleApplyFiltersTable = (page, pageSize) => {
     const params = {
-      page: 1,
-      page_size: 10,
+      page: page,
       from_date: dateRange?.[0] || undefined,
       to_date: dateRange?.[1] || undefined,
       areas: selectedProduct || undefined,
@@ -226,6 +228,7 @@ function Dashboard() {
       )
     );
     const queryString = new URLSearchParams(filteredQueryParams).toString();
+    console.log(queryString, "<<<")
     const url = `${queryString}`;
     axios.get(`${baseURL}downtime-analysis/?${url}`)
       .then((res) => {
@@ -242,9 +245,10 @@ function Dashboard() {
       })
       .catch(err => console.log(err))
   }
-
+  console.log(downTimeData)
 
   const handleTableChange = (pagination) => {
+    console.log(pagination)
     setPagination({
       ...pagination,
       pageSize: pagination.pageSize
@@ -284,8 +288,14 @@ function Dashboard() {
     initialProductionData()
     alertApi()
     getSystemStatus()
-    downtimeAnalysisData()
+    downtimeAnalysisData(pagination.current, pagination.pageSize)
     getShiftData()
+    getDownTimeData()
+    if (filterActive) {
+      handleApplyFilters(pagination.current, pagination.pageSize)
+    } else {
+      initialTableData(pagination.current, pagination.pageSize);
+    }
   }, []);
 
   const getMachines = () => {
@@ -318,6 +328,23 @@ function Dashboard() {
     })
       .then(response => {
         setShiftData([response.data])
+      })
+      .catch(error => {
+        console.error('Error fetching Shift data data:', error);
+      });
+  };
+
+  const getDownTimeData = () => {
+    const domain = `${baseURL}`;
+    let url = `${domain}downtime-graph/`;
+    axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${AuthToken}`
+      }
+    })
+      .then(response => {
+        console.log(response)
+        setDownTimeGraphData([response.data.results])
       })
       .catch(error => {
         console.error('Error fetching Shift data data:', error);
@@ -419,8 +446,11 @@ function Dashboard() {
   };
 
 
-  const downtimeAnalysisData = () => {
-    const url = `${baseURL}downtime-analysis/`
+  const downtimeAnalysisData = (page, pageSize) => {
+
+
+    const url = `${baseURL}downtime-analysis/?page=${page}`;
+
     axios.get(url, {
       headers: {
         Authorization: ` Bearer ${AuthToken}`
@@ -796,6 +826,21 @@ function Dashboard() {
               ))}
             </Select>
 
+            {/* <Select
+              style={{ minWidth: "200px", marginRight: "10px" }}
+              showSearch
+              placeholder="Select Shift"
+              onChange={handleShiftChange}
+              value={selectedShift}
+              size="large"
+              filterOption={(input, shiftOptions) =>
+                (shiftOptions?.children ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {shiftOptions?.map(department => (
+                <Select.Option key={department} value={department}>{department}</Select.Option>
+              ))}
+            </Select> */}
 
 
 
@@ -966,7 +1011,7 @@ function Dashboard() {
         </Row>
 
         <Row gutter={[24, 24]}>
-          <Col xs={24} sm={24} md={12} lg={6} className="mb-24">
+          <Col xs={24} sm={24} md={12} lg={6} className="mb-24" style={{ overflowY: "auto", height: "400px" }}>
             <Card bordered={false} className="h-full">
               {Object.keys(categoryDefects).map((category, index) => (
                 <Card key={index} bordered={true} className="criclebox h-full mb-2 px-2 ">
@@ -1093,7 +1138,6 @@ function Dashboard() {
                   filterOption={(input, productOptions) =>
                     (productOptions?.children ?? '').toLowerCase().includes(input.toLowerCase())
                   }
-
                 >
                   {productOptions?.map(department => (
                     <Select.Option key={department.id} value={department.id}>{department.name}</Select.Option>
@@ -1109,7 +1153,7 @@ function Dashboard() {
                   value={selectedDate ? [dayjs(selectedDate[0], dateFormat), dayjs(selectedDate[1], dateFormat)] : []}
                 />
 
-                <Button type="primary" onClick={handleApplyFiltersTable} style={{ fontSize: "1rem", backgroundColor: "#ec522d", marginRight: "10px" }}>Apply filters</Button>
+                <Button type="primary" onClick={() => handleApplyFiltersTable(pagination.current, pagination.pageSize)} style={{ fontSize: "1rem", backgroundColor: "#ec522d", marginRight: "10px" }}>Apply filters</Button>
                 {filterActiveTable ?
                   <Button type="primary" onClick={resetTableData} style={{ fontSize: "1rem", backgroundColor: "#ec522d", marginRight: "10px" }}>Reset Filter</Button>
                   : null}
@@ -1117,7 +1161,8 @@ function Dashboard() {
 
               </Col>
             </Row>
-            <TableComponent data={downTimeData} pagination={pagination} action={() => handleTableChange()} />
+            <TableComponent data={downTimeData} pagination={pagination} action={(page) => handleTableChange(page)} />
+            <GroupedBarChart data={downTimeGraphData} machineOptions={machineOptions} productOptions={productOptions} shiftOptions={shiftOptions} />
           </Card>
         </Col>
       </div>

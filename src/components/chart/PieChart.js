@@ -5,13 +5,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthToken, baseURL } from "../../API/API";
 
-function PieChart({data,selectedDate} ) {
+function PieChart({ data, selectedDate }) {
 
   const navigate = useNavigate()
   const { Title } = Typography;
   const [defectColors, setDefectColors] = useState({});
   const [chartData, setChartData] = useState({ labels: [], series: [] });
-  const[defectData,setDefectData]=useState([]);
+  const [defectData, setDefectData] = useState([]);
 
   useEffect(() => {
     // Fetch defect colors from the API
@@ -53,7 +53,7 @@ function PieChart({data,selectedDate} ) {
   }, [data]);
 
   if (!data || Object.keys(data).length === 0) {
-    return <div style={{ fontWeight: "700", textAlign: 'center' ,display:'flex',justifyContent:'center',alignItems:'center'}}>NO DATA</div>; // or some other fallback UI
+    return <div style={{ fontWeight: "700", textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>NO DATA</div>; // or some other fallback UI
   }
 
   let clickedVal;
@@ -79,7 +79,7 @@ function PieChart({data,selectedDate} ) {
                 }
               },
             },
-          
+
           },
           colors: chartData.labels.map((label, index) => {
             const predefinedColors = ['#FF5733', '#3357FF', '#000080', '#00FFFF', "#FFFF00", '#33FF57', '#3357HF'];
@@ -103,12 +103,12 @@ function PieChart({data,selectedDate} ) {
                 fillColors: undefined,
                 radius: 2,
                 customHTML: undefined,
-                onClick: function(){
+                onClick: function () {
                   return null
                 },
                 offsetX: 0,
                 offsetY: 0
-            },
+              },
             }
           }]
         }}

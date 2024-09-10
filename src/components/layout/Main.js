@@ -33,11 +33,10 @@ function Main({ children }) {
   }, [pathname]);
 
   return (
-    
+
     <Layout
-      className={`layout-dashboard ${
-        pathname === "dashboard" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
+      className={`layout-dashboard ${pathname === "dashboard" ? "layout-profile" : ""
+        } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
     >
       <Drawer
         title={false}
@@ -47,22 +46,19 @@ function Main({ children }) {
         visible={visible}
         key={placement === "right" ? "left" : "right"}
         width={250}
-        className={`drawer-sidebar ${
-          pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
+        className={`drawer-sidebar ${pathname === "rtl" ? "drawer-sidebar-rtl" : ""
+          } `}
       >
         <Layout
-          className={`layout-dashboard ${
-            pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
+          className={`layout-dashboard ${pathname === "rtl" ? "layout-dashboard-rtl" : ""
+            }`}
         >
-          <Sider 
+          <Sider
             trigger={null}
             width={250}
             theme="light"
-            className={`sider-primary ant-layout-sider-primary ${
-              sidenavType === "#fff" ? "active-route" : ""
-            }`}
+            className={`sider-primary ant-layout-sider-primary ${sidenavType === "#fff" ? "active-route" : ""
+              }`}
             style={{ background: sidenavType }}
           >
             <Sidenav color={sidenavColor} />
@@ -78,9 +74,8 @@ function Main({ children }) {
         trigger={null}
         width={250}
         theme="light"
-        className={`sider-primary ant-layout-sider-primary ${
-          sidenavType === "#fff" ? "active-route" : ""
-        }`}
+        className={`sider-primary ant-layout-sider-primary ${sidenavType === "#fff" ? "active-route" : ""
+          }`}
         style={{ background: sidenavType }}
       >
         <Sidenav color={sidenavColor} />
@@ -112,7 +107,7 @@ function Main({ children }) {
           </AntHeader>
         )}
         <Content className="content-ant">{children}</Content>
-      
+
       </Layout>
     </Layout>
   );

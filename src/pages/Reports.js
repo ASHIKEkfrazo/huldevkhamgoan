@@ -285,7 +285,7 @@ const Reports = () => {
     })
       .then(response => {
 
-        setStoppageOptions(response.results);
+        setStoppageOptions(response.data.results);
       })
       .catch(error => {
         console.error('Error fetching machine data:', error);
@@ -375,7 +375,6 @@ const Reports = () => {
       handleApplyFilters(pagination.current, pagination.pageSize)
     } else {
       initialTableData(pagination.current, pagination.pageSize);
-
     }
     // initialDateRange()
     prodApi()
